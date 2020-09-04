@@ -21,6 +21,16 @@ export default function Home() {
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
         />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-998540-10" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-998540-10');`,
+          }}
+        />
       </Head>
       <Navbar color="primary">
         <div className="lead">License Plate Game!</div>
