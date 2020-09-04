@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { Container, CustomInput, FormGroup, Navbar, Table } from 'reactstrap';
+import { Container, CustomInput, FormGroup, Navbar, Table, UncontrolledAlert } from 'reactstrap';
 import states from '../utils/states.json';
 
 export default function Home() {
@@ -21,6 +21,9 @@ export default function Home() {
         <div className="lead">License Plate Game!</div>
       </Navbar>
       <Container>
+        <UncontrolledAlert className="my-3">
+          As you spot license plates from different states, check the box for the state you saw!
+        </UncontrolledAlert>
         <Table>
           <thead>
             <tr>
