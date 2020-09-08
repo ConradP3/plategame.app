@@ -1,43 +1,45 @@
-import React, { useState } from 'react';
+import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@material-ui/icons';
 import Head from 'next/head';
-import { Container, CustomInput, FormGroup, Navbar, Table, UncontrolledAlert } from 'reactstrap';
+import React, { useReducer } from 'react';
+import { Container, ListGroup, ListGroupItem, Navbar, Table, UncontrolledAlert } from 'reactstrap';
 import states from '../utils/states.json';
 
+const initialState = [];
+const ADD_STATE = 'ADD_STATE';
+const REMOVE_STATE = 'REMOVE_STATE';
+
+function reducer(state, { type, payload: abbreviation }) {
+  switch (type) {
+    case ADD_STATE:
+      return [...state, abbreviation];
+    case REMOVE_STATE:
+      return [...state.filter((existingAbbreviation) => abbreviation !== existingAbbreviation)];
+    default:
+      throw new Error(`Unknown action: "${type}`);
+  }
+}
+
 export default function Home() {
-  const [found, setFound] = useState(0);
+  const [activeStates, dispatch] = useReducer(reducer, initialState);
 
-  function handleCheckboxClick(event) {
-    event.persist();
-
-    setFound((prevFound) => (event.target.checked ? prevFound + 1 : prevFound - 1));
+  function handleStateClick(abbreviation) {
+    dispatch({
+      type: activeStates.includes(abbreviation) ? REMOVE_STATE : ADD_STATE,
+      payload: abbreviation,
+    });
   }
 
   return (
     <>
       <Head>
         <title>Play the License Plate Game Online</title>
-        <script
-          data-ad-client="ca-pub-5242524909426428"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-        />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-998540-10" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'UA-998540-10');`,
-          }}
-        />
       </Head>
       <Navbar color="primary">
         <div className="lead">License Plate Game!</div>
       </Navbar>
       <Container>
         <UncontrolledAlert className="my-3">
-          As you spot license plates from different states, check the box for the state you saw!
+          As you spot license plates from different states (plus DC), check the box for the state you saw!
         </UncontrolledAlert>
         <Table>
           <thead>
@@ -48,17 +50,26 @@ export default function Home() {
           </thead>
           <tbody>
             <tr className="lead">
-              <td>{found}</td>
-              <td>{states.length - found}</td>
+              <td>{activeStates.length}</td>
+              <td>{states.length - activeStates.length}</td>
             </tr>
           </tbody>
         </Table>
         <div className="font-weight-bold border-bottom border-dark pb-3 mb-3">Select State</div>
-        {states.map(({ name, abbreviation }) => (
-          <FormGroup key={name}>
-            <CustomInput id={abbreviation} type="checkbox" label={name} onClick={handleCheckboxClick} />
-          </FormGroup>
-        ))}
+        <ListGroup>
+          {states.map(({ name, abbreviation }) => (
+            <ListGroupItem
+              active={activeStates.includes(abbreviation)}
+              onClick={() => handleStateClick(abbreviation)}
+              className="d-flex align-items-center"
+              action
+              key={name}
+            >
+              {activeStates.includes(abbreviation) ? <CheckBoxOutlined /> : <CheckBoxOutlineBlank />}
+              <span className="ml-3">{name}</span>
+            </ListGroupItem>
+          ))}
+        </ListGroup>
       </Container>
       <footer className="bg-dark p-3">
         &copy; 2020 <a href="https://ryanwalters.dev">Ryan Walters</a>
