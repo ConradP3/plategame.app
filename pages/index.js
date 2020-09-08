@@ -36,7 +36,7 @@ export default function Home() {
         <title>Play the License Plate Game Online for Free</title>
         <meta
           name="description"
-          content="As you spot license plates from different states throughout your trip, check the box for the state you saw!"
+          content="As you spot license plates from different states throughout your trip, check the box for the state you saw! No need to download an app."
         />
       </Head>
       <Navbar color="primary" fixed="top" className="shadow">
