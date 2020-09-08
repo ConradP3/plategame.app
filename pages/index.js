@@ -39,6 +39,7 @@ export default function Home() {
       </Navbar>
       <Container>
         <UncontrolledAlert className="my-3">
+          <div className="lead border-bottom mb-2 pb-2">How to play</div>
           As you spot license plates from different states (plus DC), check the box for the state you saw!
         </UncontrolledAlert>
         <Table>
@@ -62,7 +63,6 @@ export default function Home() {
               active={activeStates.includes(abbreviation)}
               onClick={() => handleStateClick(abbreviation)}
               className="d-flex align-items-center"
-              action
               key={name}
             >
               {activeStates.includes(abbreviation) ? <CheckBoxOutlined /> : <CheckBoxOutlineBlank />}
