@@ -71,7 +71,7 @@ export default function Home() {
           ))}
         </ListGroup>
       </Container>
-      <footer className="bg-dark p-3">
+      <footer className="bg-dark p-3 mt-3">
         &copy; 2020 <a href="https://ryanwalters.dev">Ryan Walters</a>
       </footer>
     </>
