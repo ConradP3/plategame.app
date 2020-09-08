@@ -41,19 +41,14 @@ export default function Home() {
       </Head>
       <Navbar color="primary" fixed="top" className="shadow">
         <h1 className="lead mb-0">License Plate Game!</h1>
-        <div
-          className="rounded-circle bg-info text-center align-items-center justify-content-center"
-          style={{ height: '1.75em', width: '1.75em' }}
-        >
-          {activeTerritories.length}
-        </div>
+        {activeTerritories.length > 0 && activeTerritories.length}
       </Navbar>
       <Container>
-        <UncontrolledAlert className="my-3">
+        <div className="my-3 p-3 rounded border">
           <div className="lead border-bottom mb-2 pb-2">How to play</div>
           As you spot license plates from different states and provinces during your trip, check the box for the state
           you saw!
-        </UncontrolledAlert>
+        </div>
         <div className="font-weight-bold border-bottom border-dark pb-3 mb-3 mt-4">United States</div>
         <ListGroup>
           {states.map(({ name, abbreviation }) => (
