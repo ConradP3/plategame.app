@@ -1,7 +1,7 @@
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@material-ui/icons';
 import Head from 'next/head';
 import React, { useReducer } from 'react';
-import { Badge, Container, ListGroup, ListGroupItem, Navbar, Table, UncontrolledAlert } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem, Navbar } from 'reactstrap';
 import states from '../utils/us-states.json';
 import provinces from '../utils/ca-provinces.json';
 
