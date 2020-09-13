@@ -54,37 +54,37 @@ export default function Home() {
   }, [activeTerritories]);
 
   return (
-    isMounted && (
-      <>
-        <Head>
-          <title>Play the License Plate Game Online for Free</title>
-          <meta
-            name="description"
-            content="No app download required! As you spot license plates from different states and provinces during your trip, check the box!"
-          />
-        </Head>
-        <Navbar color="primary" fixed="top" className="shadow">
-          <h1 className="lead mb-0">License Plate Game!</h1>
-          {activeTerritories.length > 0 && activeTerritories.length}
-        </Navbar>
-        <Container>
-          <div className="my-3 p-3 rounded border">
-            <div className="lead border-bottom mb-2 pb-2">How to play</div>
-            As you spot license plates from different states and provinces during your trip, check the box!
-          </div>
-          <Row className="mt-3 d-flex align-items-end">
-            <Col>
-              <div className="font-weight-bold">United States</div>
-            </Col>
-            <Col xs="auto">
-              <Button className="d-inline-flex align-items-center" onClick={handleResetClick}>
-                <Refresh className="mr-2" />
-                Reset
-              </Button>
-            </Col>
-          </Row>
-          <ListGroup className="border-top border-dark pt-3 mt-3">
-            {states.map(({ name, abbreviation }) => (
+    <>
+      <Head>
+        <title>Play the License Plate Game Online for Free</title>
+        <meta
+          name="description"
+          content="No app download required! As you spot license plates from different states and provinces during your trip, check the box!"
+        />
+      </Head>
+      <Navbar color="primary" fixed="top" className="shadow">
+        <h1 className="lead mb-0">License Plate Game!</h1>
+        {isMounted && activeTerritories.length > 0 && activeTerritories.length}
+      </Navbar>
+      <Container>
+        <div className="my-3 p-3 rounded border">
+          <div className="lead border-bottom mb-2 pb-2">How to play</div>
+          As you spot license plates from different states and provinces during your trip, check the box!
+        </div>
+        <Row className="mt-3 d-flex align-items-end">
+          <Col>
+            <div className="font-weight-bold">United States</div>
+          </Col>
+          <Col xs="auto">
+            <Button className="d-inline-flex align-items-center" onClick={handleResetClick}>
+              <Refresh className="mr-2" />
+              Reset
+            </Button>
+          </Col>
+        </Row>
+        <ListGroup className="border-top border-dark pt-3 mt-3">
+          {isMounted &&
+            states.map(({ name, abbreviation }) => (
               <ListGroupItem
                 active={activeTerritories.includes(abbreviation)}
                 onClick={() => handleStateClick(abbreviation)}
@@ -95,9 +95,10 @@ export default function Home() {
                 <span className="ml-3">{name}</span>
               </ListGroupItem>
             ))}
-          </ListGroup>
-          <div className="font-weight-bold border-bottom border-dark pb-3 mb-3 mt-4">Canada</div>
-          {provinces.map(({ name, abbreviation }) => (
+        </ListGroup>
+        <div className="font-weight-bold border-bottom border-dark pb-3 mb-3 mt-4">Canada</div>
+        {isMounted &&
+          provinces.map(({ name, abbreviation }) => (
             <ListGroupItem
               active={activeTerritories.includes(abbreviation)}
               onClick={() => handleStateClick(abbreviation)}
@@ -108,11 +109,10 @@ export default function Home() {
               <span className="ml-3">{name}</span>
             </ListGroupItem>
           ))}
-        </Container>
-        <footer className="bg-dark p-3 mt-3">
-          &copy; 2020 <a href="https://ryanwalters.dev">Ryan Walters</a>
-        </footer>
-      </>
-    )
+      </Container>
+      <footer className="bg-dark p-3 mt-3">
+        &copy; 2020 <a href="https://ryanwalters.dev">Ryan Walters</a>
+      </footer>
+    </>
   );
 }
