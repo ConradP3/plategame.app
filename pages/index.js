@@ -1,8 +1,9 @@
-import { CheckBoxOutlineBlank, CheckBoxOutlined, Refresh } from '@material-ui/icons';
+import { Check, CheckBoxOutlineBlank, CheckBoxOutlined, Refresh } from '@material-ui/icons';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Col, Container, ListGroup, ListGroupItem, Navbar, Row } from 'reactstrap';
+import { Button, ButtonGroup, Col, Container, ListGroup, ListGroupItem, Navbar, Row } from 'reactstrap';
+import useMultiplayer from '../hooks/useMultiplayer';
 import states from '../utils/us-states.json';
 import provinces from '../utils/ca-provinces.json';
 
@@ -24,9 +25,17 @@ function reducer(state, { type, payload: abbreviation }) {
   }
 }
 
+/**
+ * todo:
+ * - use react-hook-form for join game validation
+ *   - close modal on success
+ *   - show error when game doesnt exist
+ */
+
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
   const [activeTerritories, dispatch] = useReducer(reducer, initialState);
+  const { createGame, disconnect, gameId, isConnected } = useMultiplayer();
 
   function handleStateClick(abbreviation) {
     dispatch({
@@ -71,6 +80,13 @@ export default function Home() {
           <div className="lead border-bottom mb-2 pb-2">How to play</div>
           As you spot license plates from different states and provinces during your trip, check the box!
         </div>
+        <ButtonGroup className="d-flex">
+          <Button onClick={createGame} disabled={isConnected}>
+            {isConnected ? `Game ID: ${gameId || '...'}` : 'Create Game'}
+          </Button>
+          {!isConnected ? <Button>Join Game</Button> : <Button onClick={disconnect}>Disconnect</Button>}
+        </ButtonGroup>
+        {/* {isConnected && <Check className="ml-3 text-success" />} */}
         <Row className="mt-3 d-flex align-items-end">
           <Col>
             <div className="font-weight-bold">United States</div>
