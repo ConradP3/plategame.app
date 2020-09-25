@@ -2,7 +2,21 @@ import { Check, CheckBoxOutlineBlank, CheckBoxOutlined, Refresh } from '@materia
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, ButtonGroup, Col, Container, ListGroup, ListGroupItem, Navbar, Row } from 'reactstrap';
+import {
+  Button,
+  ButtonGroup,
+  Col,
+  Container,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  ListGroup,
+  ListGroupItem,
+  Modal,
+  ModalBody,
+  Navbar,
+  Row,
+} from 'reactstrap';
 import useMultiplayer from '../hooks/useMultiplayer';
 import states from '../utils/us-states.json';
 import provinces from '../utils/ca-provinces.json';
@@ -34,10 +48,11 @@ function reducer(state, { type, payload: abbreviation }) {
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTerritories, dispatch] = useReducer(reducer, initialState);
-  const { createGame, disconnect, gameId, isConnected } = useMultiplayer();
+  const { createGame, disconnect, gameId, isConnected, isConnecting } = useMultiplayer();
 
-  function handleStateClick(abbreviation) {
+  function handleTerritoryClick(abbreviation) {
     dispatch({
       type: activeTerritories.includes(abbreviation) ? REMOVE_TERRITORY : ADD_TERRITORY,
       payload: abbreviation,
@@ -48,6 +63,18 @@ export default function Home() {
     dispatch({
       type: RESET_TERRITORIES,
     });
+  }
+
+  function toggleModal() {
+    setIsModalOpen((prevIsOpen) => !prevIsOpen);
+  }
+
+  function handleJoinGameSubmit(event) {
+    event.preventDefault();
+
+    // joinGame(event.target.elements.gameId.value);
+
+    setIsModalOpen(false);
   }
 
   // Needed to make the previously selected territories in the cookie work ¯\_(ツ)_/¯
@@ -61,6 +88,9 @@ export default function Home() {
   useEffect(() => {
     Cookies.set('activeTerritories', activeTerritories);
   }, [activeTerritories]);
+
+  useEffect(() => console.log(isConnecting), [isConnecting]);
+  useEffect(() => console.log(isConnected), [isConnected]);
 
   return (
     <>
@@ -84,7 +114,11 @@ export default function Home() {
           <Button onClick={createGame} disabled={isConnected}>
             {isConnected ? `Game ID: ${gameId || '...'}` : 'Create Game'}
           </Button>
-          {!isConnected ? <Button>Join Game</Button> : <Button onClick={disconnect}>Disconnect</Button>}
+          {!isConnected ? (
+            <Button onClick={toggleModal}>Join Game</Button>
+          ) : (
+            <Button onClick={disconnect}>Disconnect</Button>
+          )}
         </ButtonGroup>
         {/* {isConnected && <Check className="ml-3 text-success" />} */}
         <Row className="mt-3 d-flex align-items-end">
@@ -103,7 +137,7 @@ export default function Home() {
             states.map(({ name, abbreviation }) => (
               <ListGroupItem
                 active={activeTerritories.includes(abbreviation)}
-                onClick={() => handleStateClick(abbreviation)}
+                onClick={() => handleTerritoryClick(abbreviation)}
                 className="d-flex align-items-center"
                 key={name}
               >
@@ -117,7 +151,7 @@ export default function Home() {
           provinces.map(({ name, abbreviation }) => (
             <ListGroupItem
               active={activeTerritories.includes(abbreviation)}
-              onClick={() => handleStateClick(abbreviation)}
+              onClick={() => handleTerritoryClick(abbreviation)}
               className="d-flex align-items-center"
               key={name}
             >
@@ -129,6 +163,18 @@ export default function Home() {
       <footer className="bg-dark p-3 mt-3">
         &copy; 2020 <a href="https://ryanwalters.dev">Ryan Walters</a>
       </footer>
+      <Modal isOpen={isModalOpen} toggle={toggleModal} centered>
+        <ModalBody>
+          <form onSubmit={handleJoinGameSubmit}>
+            <InputGroup>
+              <Input name="gameId" placeholder="Enter Game ID..." maxLength={4} />
+              <InputGroupAddon addonType="append">
+                <Button type="submit">Join</Button>
+              </InputGroupAddon>
+            </InputGroup>
+          </form>
+        </ModalBody>
+      </Modal>
     </>
   );
 }
