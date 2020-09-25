@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 export default function useMultiplayer() {
   const [websocket, setWebsocket] = useState(null);
+  const [error, setError] = useState();
   const [gameId, setGameId] = useState();
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (websocket) {
@@ -35,17 +35,18 @@ export default function useMultiplayer() {
             action: 'getGameId',
           })
         );
-
-        setIsConnected(true);
       };
 
       // Disconnect
 
       websocket.onclose = () => {
-        setIsConnected(false);
         setGameId(undefined);
         setWebsocket(null);
       };
+
+      // Error
+
+      websocket.onerror = (websocketError) => setError(websocketError);
     }
 
     // Disconnect on unmount
@@ -66,7 +67,10 @@ export default function useMultiplayer() {
   return {
     createGame,
     disconnect,
+    error,
     gameId,
-    isConnected,
+    isConnected: websocket?.readyState === 1, // WebSocket.OPEN
+    isConnecting: websocket?.readyState === 0, // WebSocket.CONNECTING
+    readyState: websocket?.readyState,
   };
 }
